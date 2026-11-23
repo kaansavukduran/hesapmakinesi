@@ -1,0 +1,1136 @@
+:root {
+  /* Desk & UI palette */
+  --bg-desk: #e8e4dc;
+  --bg-desk-edge: #dad4c8;
+  --ink-primary: #1f2328;
+  --ink-muted: #5a6068;
+  --surface-paper: #fbfaf6;
+  --surface-paper-border: #dfd9cc;
+  --accent-coral: #c84b31;
+  --accent-coral-dark: #a63a24;
+  --accent-brass: #d4a76a;
+
+  /* Calculator hardware palette */
+  --chassis-top: #303439;
+  --chassis-mid: #25282c;
+  --chassis-bottom: #1c1f22;
+  --bezel-alu: #373c42;
+  --bezel-alu-dark: #2c3035;
+
+  /* LCD palette */
+  --lcd-bg-top: #c7d0b8;
+  --lcd-bg-bottom: #b6c0a4;
+  --lcd-ink: #171d14;
+  --lcd-ghost: rgba(23, 29, 20, 0.085);
+  --lcd-dim: rgba(23, 29, 20, 0.16);
+
+  /* Keycap palettes */
+  --key-num-top: #42474e;
+  --key-num-bot: #34383e;
+  --key-num-edge: #17191c;
+
+  --key-op-top: #555c66;
+  --key-op-bot: #454b54;
+  --key-op-edge: #1b1e22;
+
+  --key-eq-top: #5f6873;
+  --key-eq-bot: #4b535d;
+
+  --key-fn-top: #32363c;
+  --key-fn-bot: #272b30;
+  --key-fn-edge: #141619;
+
+  --key-ac-top: #cf5238;
+  --key-ac-bot: #b44028;
+  --key-ac-edge: #5e1d10;
+
+  --key-ce-top: #8b3f31;
+  --key-ce-bot: #733125;
+  --key-ce-edge: #401811;
+
+  /* Typography */
+  --font-ui: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-lcd: "Chakra Petch", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Radii & transitions */
+  --radius-chassis: 20px;
+  --radius-key: 9px;
+  --ease-press: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-ui);
+  color: var(--ink-primary);
+  background-color: var(--bg-desk);
+  background-image:
+    radial-gradient(ellipse 90% 70% at 22% 10%, rgba(255, 253, 248, 0.72), transparent 65%),
+    radial-gradient(ellipse 80% 70% at 85% 95%, rgba(168, 158, 140, 0.28), transparent 60%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Top bar */
+.topbar {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 18px 20px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.topbar-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.topbar-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink-primary);
+}
+
+.topbar-subtitle {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tool-btn {
+  appearance: none;
+  border: 1px solid rgba(31, 35, 40, 0.12);
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--ink-primary);
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.16s ease, border-color 0.16s ease, transform 0.12s ease;
+  backdrop-filter: blur(6px);
+}
+
+.tool-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(31, 35, 40, 0.22);
+}
+
+.tool-btn:active {
+  transform: translateY(1px);
+}
+
+.tool-btn[aria-pressed="true"] {
+  background: #272b30;
+  color: #f4f2ec;
+  border-color: #272b30;
+}
+
+.tool-btn svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.badge-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: var(--accent-coral);
+  color: #fff;
+}
+
+.badge-count[hidden] {
+  display: none;
+}
+
+/* Main counter workspace */
+.workspace {
+  flex: 1;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 12px 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+
+/* =========================================================
+   CALCULATOR HARDWARE CHASSIS
+   ========================================================= */
+.calculator {
+  width: min(100%, 426px);
+  flex-shrink: 0;
+  background: linear-gradient(180deg, var(--chassis-top) 0%, var(--chassis-mid) 35%, var(--chassis-bottom) 100%);
+  border-radius: var(--radius-chassis);
+  padding: 16px 16px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 2px 0 #15171a,
+    0 6px 0 #191c1f,
+    0 22px 42px -10px rgba(24, 22, 18, 0.42),
+    0 8px 18px -4px rgba(24, 22, 18, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  position: relative;
+}
+
+/* Upper aluminum faceplate */
+.calc-head {
+  background: linear-gradient(180deg, #3c4148 0%, #2f3339 100%);
+  border-radius: 13px;
+  padding: 13px 14px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.06);
+  margin-bottom: 13px;
+}
+
+.calc-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 11px;
+  gap: 10px;
+}
+
+.brand-plate {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-name {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  line-height: 1;
+}
+
+.brand-logo {
+  font-size: 0.96rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #edf0f2;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.brand-model {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent-brass);
+}
+
+.brand-spec {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: rgba(235, 239, 242, 0.48);
+  text-transform: uppercase;
+}
+
+/* Solar cell strip */
+.solar-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.solar-panel {
+  width: 112px;
+  height: 24px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #271b16 0%, #3a271f 52%, #241813 100%);
+  border: 1.5px solid #16181b;
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.7),
+    0 1px 0 rgba(255, 255, 255, 0.09);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  overflow: hidden;
+  position: relative;
+}
+
+.solar-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(125deg, rgba(255, 255, 255, 0.14) 0%, transparent 42%, transparent 62%, rgba(255, 255, 255, 0.05) 100%);
+  pointer-events: none;
+}
+
+.solar-cell {
+  border-right: 1px solid rgba(155, 118, 86, 0.34);
+}
+
+.solar-cell:last-child {
+  border-right: none;
+}
+
+.solar-caption {
+  font-size: 0.54rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  color: rgba(235, 239, 242, 0.44);
+  text-transform: uppercase;
+}
+
+/* Recessed LCD Display */
+.lcd-bezel {
+  background: #141618;
+  border-radius: 9px;
+  padding: 7px;
+  box-shadow:
+    inset 0 3px 7px rgba(0, 0, 0, 0.85),
+    0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+.lcd-screen {
+  position: relative;
+  background: linear-gradient(180deg, var(--lcd-bg-top) 0%, var(--lcd-bg-bottom) 100%);
+  border-radius: 5px;
+  padding: 8px 12px 9px;
+  min-height: 92px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow:
+    inset 0 3px 6px rgba(24, 30, 20, 0.28),
+    inset 0 0 0 1px rgba(24, 30, 20, 0.22);
+  cursor: pointer;
+  overflow: hidden;
+  transition: filter 0.12s ease;
+}
+
+.lcd-screen:hover {
+  filter: brightness(1.02);
+}
+
+.lcd-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(168deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.04) 38%, transparent 40%);
+  pointer-events: none;
+}
+
+.lcd-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+.lcd-flags {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.lcd-flag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--lcd-dim);
+  padding: 0 3px;
+  border-radius: 2px;
+  transition: color 0.1s ease, background-color 0.1s ease;
+}
+
+.lcd-flag.active {
+  color: var(--lcd-ink);
+}
+
+.lcd-flag.flag-error.active {
+  background: var(--lcd-ink);
+  color: var(--lcd-bg-top);
+}
+
+.lcd-subline {
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: rgba(23, 29, 20, 0.72);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+  max-width: 65%;
+  min-height: 16px;
+}
+
+.lcd-main-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+  margin-top: 4px;
+}
+
+.lcd-op-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 22px;
+  flex-shrink: 0;
+  padding-bottom: 5px;
+  gap: 1px;
+}
+
+.lcd-operator {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--lcd-ink);
+  min-height: 17px;
+  text-shadow: 1px 1px 0 rgba(23, 29, 20, 0.12);
+}
+
+.lcd-digits-wrap {
+  position: relative;
+  flex: 1;
+  text-align: right;
+  overflow: hidden;
+}
+
+.lcd-value {
+  position: relative;
+  display: block;
+  font-family: var(--font-lcd);
+  font-size: 2.55rem;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: 0.025em;
+  font-variant-numeric: tabular-nums;
+  color: var(--lcd-ink);
+  text-shadow: 1.5px 2px 0 rgba(23, 29, 20, 0.13);
+  white-space: nowrap;
+  transition: font-size 0.08s ease;
+}
+
+.lcd-value.len-md {
+  font-size: 2.02rem;
+}
+
+.lcd-value.len-lg {
+  font-size: 1.66rem;
+}
+
+/* =========================================================
+   PHYSICAL SLIDE SWITCHES (DECIMAL & KDV RATE)
+   ========================================================= */
+.calc-switches {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 0 2px;
+}
+
+.switch-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.switch-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(235, 239, 242, 0.56);
+  text-transform: uppercase;
+}
+
+.slide-track {
+  display: inline-flex;
+  background: #17191c;
+  border-radius: 6px;
+  padding: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.65);
+}
+
+.slide-opt {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: rgba(235, 239, 242, 0.48);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.14s ease, color 0.14s ease, box-shadow 0.14s ease;
+  line-height: 1;
+}
+
+.slide-opt:hover {
+  color: rgba(235, 239, 242, 0.85);
+}
+
+.slide-opt.active {
+  background: linear-gradient(180deg, #4b5058 0%, #383c43 100%);
+  color: #f4f5f6;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.slide-opt:focus-visible {
+  outline: 2px solid var(--accent-brass);
+  outline-offset: 1px;
+}
+
+/* =========================================================
+   TACTILE KEYPAD
+   ========================================================= */
+.calc-keypad {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.keys-slim {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 9px;
+}
+
+.keys-main {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: 54px;
+  gap: 9px;
+}
+
+.key {
+  appearance: none;
+  border: none;
+  position: relative;
+  border-radius: var(--radius-key);
+  font-family: var(--font-ui);
+  font-weight: 700;
+  color: #f5f6f7;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  outline: none;
+  transition:
+    transform 0.06s var(--ease-press),
+    box-shadow 0.06s var(--ease-press),
+    filter 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.key:focus-visible {
+  outline: 2px solid var(--accent-brass);
+  outline-offset: 2px;
+}
+
+/* Number keys */
+.key-num {
+  font-size: 1.32rem;
+  background: linear-gradient(180deg, var(--key-num-top) 0%, var(--key-num-bot) 100%);
+  box-shadow:
+    0 4px 0 var(--key-num-edge),
+    0 5px 7px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.22);
+}
+
+/* Operator keys */
+.key-op {
+  font-size: 1.38rem;
+  background: linear-gradient(180deg, var(--key-op-top) 0%, var(--key-op-bot) 100%);
+  box-shadow:
+    0 4px 0 var(--key-op-edge),
+    0 5px 7px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.22);
+}
+
+.key-op.key-sign,
+.key-op.key-pct {
+  font-size: 1.08rem;
+}
+
+/* Tall iconic PLUS key */
+.key-plus {
+  grid-column: 4;
+  grid-row: 4 / span 2;
+  font-size: 1.75rem;
+}
+
+/* Equals key */
+.key-eq {
+  font-size: 1.55rem;
+  background: linear-gradient(180deg, var(--key-eq-top) 0%, var(--key-eq-bot) 100%);
+  box-shadow:
+    0 4px 0 var(--key-op-edge),
+    0 5px 7px rgba(0, 0, 0, 0.44),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.22);
+}
+
+/* Function & Memory keys */
+.key-fn {
+  font-size: 0.84rem;
+  letter-spacing: 0.02em;
+  color: #e6dfd3;
+  background: linear-gradient(180deg, var(--key-fn-top) 0%, var(--key-fn-bot) 100%);
+  box-shadow:
+    0 3.5px 0 var(--key-fn-edge),
+    0 4px 6px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.11),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.24);
+}
+
+.keys-slim .key-fn {
+  height: 36px;
+  font-size: 0.76rem;
+  border-radius: 7px;
+}
+
+.key-kdv {
+  color: var(--accent-brass);
+}
+
+/* All Clear (AC) iconic coral-red */
+.key-ac {
+  font-size: 0.96rem;
+  letter-spacing: 0.03em;
+  background: linear-gradient(180deg, var(--key-ac-top) 0%, var(--key-ac-bot) 100%);
+  box-shadow:
+    0 4px 0 var(--key-ac-edge),
+    0 5px 8px rgba(0, 0, 0, 0.44),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Clear Entry (CE) muted rust */
+.key-ce {
+  font-size: 0.92rem;
+  letter-spacing: 0.03em;
+  background: linear-gradient(180deg, var(--key-ce-top) 0%, var(--key-ce-bot) 100%);
+  box-shadow:
+    0 4px 0 var(--key-ce-edge),
+    0 5px 7px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.22);
+}
+
+.key:hover {
+  filter: brightness(1.07);
+}
+
+.key:active,
+.key.pressed {
+  transform: translateY(3px);
+  filter: brightness(0.97);
+}
+
+.key-num:active,
+.key-num.pressed {
+  box-shadow:
+    0 1px 0 var(--key-num-edge),
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    inset 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.key-op:active,
+.key-op.pressed,
+.key-eq:active,
+.key-eq.pressed {
+  box-shadow:
+    0 1px 0 var(--key-op-edge),
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    inset 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.key-fn:active,
+.key-fn.pressed {
+  box-shadow:
+    0 1px 0 var(--key-fn-edge),
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    inset 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.key-ac:active,
+.key-ac.pressed {
+  box-shadow:
+    0 1px 0 var(--key-ac-edge),
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.key-ce:active,
+.key-ce.pressed {
+  box-shadow:
+    0 1px 0 var(--key-ce-edge),
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Tactile bump on 5 key (real desktop calculators have a raised dot on 5!) */
+.key-five::after {
+  content: "";
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 9px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.32);
+}
+
+/* =========================================================
+   KASA FİŞİ (THERMAL PAPER RECEIPT TAPE)
+   ========================================================= */
+.receipt-panel {
+  width: 310px;
+  max-height: 590px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  filter: drop-shadow(0 14px 24px rgba(35, 30, 22, 0.14));
+  animation: receipt-in 0.2s ease-out;
+}
+
+.receipt-panel[hidden] {
+  display: none;
+}
+
+@keyframes receipt-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Serrated thermal paper top & bottom edges */
+.receipt-edge-top,
+.receipt-edge-bottom {
+  height: 10px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.receipt-edge-top {
+  background:
+    linear-gradient(-45deg, var(--surface-paper) 5px, transparent 0),
+    linear-gradient(45deg, var(--surface-paper) 5px, transparent 0);
+  background-size: 10px 10px;
+  background-repeat: repeat-x;
+}
+
+.receipt-edge-bottom {
+  background:
+    linear-gradient(-135deg, var(--surface-paper) 5px, transparent 0),
+    linear-gradient(135deg, var(--surface-paper) 5px, transparent 0);
+  background-size: 10px 10px;
+  background-repeat: repeat-x;
+}
+
+.receipt-body {
+  background: var(--surface-paper);
+  padding: 14px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 360px;
+  max-height: 570px;
+  border-left: 1px solid rgba(0, 0, 0, 0.04);
+  border-right: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.receipt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1.5px dashed var(--surface-paper-border);
+}
+
+.receipt-title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-primary);
+}
+
+.receipt-close {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.receipt-close:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--ink-primary);
+}
+
+.receipt-list {
+  flex: 1;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.receipt-empty {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  text-align: center;
+  padding: 42px 10px;
+  line-height: 1.6;
+}
+
+.receipt-item {
+  width: 100%;
+  appearance: none;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 7px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: background-color 0.12s ease;
+}
+
+.receipt-item:hover {
+  background: rgba(31, 35, 40, 0.05);
+}
+
+.receipt-expr {
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+  word-break: break-all;
+}
+
+.receipt-res {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--ink-primary);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.receipt-footer {
+  padding-top: 10px;
+  border-top: 1.5px dashed var(--surface-paper-border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.receipt-gt-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+.receipt-gt-label {
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+.receipt-gt-val {
+  font-weight: 700;
+  font-size: 0.96rem;
+  color: var(--ink-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.receipt-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.receipt-btn {
+  flex: 1;
+  appearance: none;
+  border: 1px solid var(--surface-paper-border);
+  background: #f2efe7;
+  color: var(--ink-primary);
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 7px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.14s ease, border-color 0.14s ease;
+}
+
+.receipt-btn:hover {
+  background: #e7e2d7;
+  border-color: #cbc4b5;
+}
+
+.receipt-btn-danger:hover {
+  background: #f6e4e0;
+  border-color: #dfafa5;
+  color: var(--accent-coral-dark);
+}
+
+/* =========================================================
+   TUŞ REHBERİ (HELP DIALOG)
+   ========================================================= */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 22, 25, 0.52);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100;
+}
+
+.modal-backdrop[hidden] {
+  display: none;
+}
+
+.modal-card {
+  width: min(100%, 460px);
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--surface-paper);
+  border-radius: 16px;
+  padding: 20px 22px 22px;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.guide-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.guide-list li {
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  gap: 12px;
+  align-items: baseline;
+  font-size: 0.85rem;
+  line-height: 1.48;
+  color: #32373d;
+}
+
+.guide-kbd {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  background: #272b30;
+  color: #f4f2ec;
+  padding: 3px 7px;
+  border-radius: 5px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.guide-kbd.coral {
+  background: var(--accent-coral);
+}
+
+.guide-note {
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--surface-paper-border);
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+
+/* Footer hint */
+.desk-hint {
+  text-align: center;
+  padding: 0 16px 16px;
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+}
+
+/* =========================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================= */
+@media (max-width: 820px) {
+  .workspace {
+    flex-direction: column;
+    align-items: center;
+    padding-top: 8px;
+  }
+
+  .receipt-panel {
+    width: min(100%, 426px);
+    max-height: 360px;
+  }
+
+  .receipt-body {
+    min-height: 200px;
+    max-height: 340px;
+  }
+}
+
+@media (max-width: 440px) {
+  .topbar {
+    padding: 12px 12px 6px;
+  }
+
+  .topbar-subtitle {
+    display: none;
+  }
+
+  .tool-btn span.btn-label {
+    display: none;
+  }
+
+  .workspace {
+    padding: 6px 10px 20px;
+  }
+
+  .calculator {
+    padding: 12px 12px 16px;
+    border-radius: 16px;
+  }
+
+  .calc-head {
+    padding: 11px 11px 12px;
+  }
+
+  .solar-panel {
+    width: 92px;
+    height: 21px;
+  }
+
+  .lcd-value {
+    font-size: 2.25rem;
+  }
+
+  .lcd-value.len-md {
+    font-size: 1.8rem;
+  }
+
+  .lcd-value.len-lg {
+    font-size: 1.48rem;
+  }
+
+  .keys-slim {
+    gap: 7px;
+  }
+
+  .keys-main {
+    grid-auto-rows: 49px;
+    gap: 7px;
+  }
+
+  .key-num {
+    font-size: 1.2rem;
+  }
+
+  .key-op {
+    font-size: 1.24rem;
+  }
+
+  .switch-label {
+    display: none;
+  }
+}
