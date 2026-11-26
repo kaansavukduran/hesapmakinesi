@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KASA 120D — Esnaf Hesap Makinesi & Hikâye Oyunu</title>
-  <meta name="description" content="Klasik 12 haneli masaüstü esnaf hesap makinesi ve 5 bölümlük çift dilli (TR/EN) hikâyeli ustalık oyunu: Mahalle bakkalından mafya bodrumuna, CERN'den uzay-zaman bükülmesine!" />
+  <title>KASA 120D — Canlı Esnaf Hesap Makinesi & Hikâye Oyunu</title>
+  <meta name="description" content="Klasik 12 haneli masaüstü esnaf hesap makinesi, canlı animasyonlu 5 bölümlük çift dilli (TR/EN) hikâye oyunu, Uzak Doğu temalı Usta mentor, Usta Gözü (X-Ray), Tuş Atölyesi ve Esnaf Rush!" />
   <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,13 +15,15 @@
   <header class="topbar">
     <div class="topbar-brand">
       <h1 class="topbar-title" data-i18n="brandTitle">Esnaf Hesap Makinesi</h1>
-      <span class="version-tag" data-i18n="appVersion">v2.0.0</span>
-      <span class="topbar-subtitle" data-i18n="brandSubtitle">KASA 120D · Hikâye & Masaüstü</span>
+      <span class="version-tag" data-i18n="appVersion">v3.0.0</span>
+      <span class="topbar-subtitle" data-i18n="brandSubtitle">KASA 120D · Canlı Hikâye & Atölye</span>
     </div>
 
     <nav class="topbar-actions" aria-label="Araç çubuğu">
-      <div class="seg-group" role="group" aria-label="Oyun modu">
+      <div class="seg-group seg-modes" role="group" aria-label="Oyun modu">
         <button type="button" id="btn-mode-story" class="seg-btn active" aria-pressed="true" data-i18n="modeStory">Hikâye</button>
+        <button type="button" id="btn-mode-dojo" class="seg-btn" aria-pressed="false" data-i18n="modeDojo">Atölye</button>
+        <button type="button" id="btn-mode-rush" class="seg-btn" aria-pressed="false" data-i18n="modeRush">Rush</button>
         <button type="button" id="btn-mode-free" class="seg-btn" aria-pressed="false" data-i18n="modeFree">Serbest</button>
       </div>
 
@@ -30,7 +32,7 @@
         <button type="button" id="btn-lang-en" class="seg-btn">EN</button>
       </div>
 
-      <button type="button" id="btn-music" class="tool-btn" aria-pressed="true" title="Gerilim müziğini aç / kapat">
+      <button type="button" id="btn-music" class="tool-btn" aria-pressed="true" title="Müzik aç / kapat">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M9 18V5l12-2v13" />
           <circle cx="6" cy="18" r="3" />
@@ -39,13 +41,21 @@
         <span class="btn-label" data-i18n="btnMusic">Müzik</span>
       </button>
 
-      <button type="button" id="btn-sound" class="tool-btn" aria-pressed="true" title="Tuş ve efekt seslerini aç / kapat">
+      <button type="button" id="btn-sound" class="tool-btn" aria-pressed="true" title="Efekt seslerini aç / kapat">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
           <path id="sound-wave-1" d="M15.54 8.46a5 5 0 0 1 0 7.07" />
           <path id="sound-wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14" />
         </svg>
         <span class="btn-label" data-i18n="btnSound">Ses</span>
+      </button>
+
+      <button type="button" id="btn-xray" class="tool-btn" aria-pressed="true" title="Usta Gözü (X-Ray hafıza paneli)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+        <span class="btn-label" data-i18n="btnXray">Usta Gözü</span>
       </button>
 
       <button type="button" id="btn-receipt" class="tool-btn" aria-pressed="false" aria-controls="receipt-panel" title="Kasa fişini göster / gizle">
@@ -55,11 +65,11 @@
           <path d="M8 11h8" />
           <path d="M8 15h5" />
         </svg>
-        <span class="btn-label" data-i18n="btnReceipt">Kasa Fişi</span>
+        <span class="btn-label" data-i18n="btnReceipt">Fiş</span>
         <span id="receipt-badge" class="badge-count" hidden>0</span>
       </button>
 
-      <button type="button" id="btn-guide" class="tool-btn" title="Tuş rehberi ve kısayollar">
+      <button type="button" id="btn-guide" class="tool-btn" title="Tuş rehberi">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="10" />
           <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
@@ -71,132 +81,153 @@
   </header>
 
   <main class="workspace">
-    <!-- Interactive 5-Episode Story Stage -->
-    <section id="story-stage" class="story-stage" aria-label="Hikâye sahnesi"></section>
+    <!-- Interactive Live Story / Dojo / Rush Stage -->
+    <section id="story-stage" class="story-stage" aria-label="Canlı hikâye sahnesi"></section>
 
-    <!-- Classic 12-Digit Shop Calculator -->
-    <section class="calculator" aria-label="12 haneli esnaf hesap makinesi">
-      <!-- Upper Faceplate & LCD -->
-      <div class="calc-head">
-        <div class="calc-brand-row">
-          <div class="brand-plate">
-            <div class="brand-name">
-              <span class="brand-logo">ESNAF</span>
-              <span class="brand-model">120D</span>
-            </div>
-            <span class="brand-spec" data-i18n="brandSpec">12 Haneli Masaüstü</span>
-          </div>
-          <div class="solar-unit" aria-hidden="true">
-            <div class="solar-panel">
-              <span class="solar-cell"></span>
-              <span class="solar-cell"></span>
-              <span class="solar-cell"></span>
-              <span class="solar-cell"></span>
-            </div>
-            <span class="solar-caption">Two Way Power</span>
-          </div>
+    <!-- Calculator Column: X-Ray Strip + Classic 12-Digit Shop Calculator -->
+    <div class="calc-column">
+      <div id="xray-bar" class="xray-bar" aria-label="Usta Gözü canlı hafıza göstergesi">
+        <div class="xray-head">
+          <span class="xray-title" data-i18n="xrayTitle">USTA GÖZÜ · X-RAY</span>
+          <span id="xray-note" class="xray-note"></span>
         </div>
-
-        <div class="lcd-bezel">
-          <div
-            id="lcd-screen"
-            class="lcd-screen"
-            role="button"
-            tabindex="0"
-            title="Sonucu kopyalamak için ekrana tıklayın"
-            aria-label="Hesap makinesi ekranı"
-          >
-            <div class="lcd-status-row">
-              <div class="lcd-flags" aria-label="Durum göstergeleri">
-                <span id="flag-m" class="lcd-flag" aria-hidden="true">M</span>
-                <span id="flag-gt" class="lcd-flag" aria-hidden="true">GT</span>
-                <span id="flag-kdv" class="lcd-flag" aria-hidden="true">KDV</span>
-                <span id="flag-err" class="lcd-flag flag-error" aria-hidden="true">E</span>
-              </div>
-              <div id="lcd-subline" class="lcd-subline" aria-live="off"></div>
-            </div>
-            <div class="lcd-main-row">
-              <div class="lcd-op-col">
-                <span id="lcd-operator" class="lcd-operator" aria-hidden="true"></span>
-              </div>
-              <div class="lcd-digits-wrap">
-                <output id="lcd-value" class="lcd-value" aria-live="polite">0</output>
-              </div>
-            </div>
+        <div class="xray-cells">
+          <div class="xray-cell">
+            <span class="xray-label" data-i18n="xrayMem">Hafıza (M)</span>
+            <strong id="xray-mem-val" class="xray-val">0</strong>
+          </div>
+          <div class="xray-cell">
+            <span class="xray-label" data-i18n="xrayGt">Genel Toplam (GT)</span>
+            <strong id="xray-gt-val" class="xray-val">0</strong>
+          </div>
+          <div class="xray-cell">
+            <span class="xray-label" data-i18n="xrayPending">Bekleyen</span>
+            <strong id="xray-pend-val" class="xray-val">—</strong>
           </div>
         </div>
       </div>
 
-      <!-- Hardware Slide Switches -->
-      <div class="calc-switches">
-        <div class="switch-group">
-          <span class="switch-label" data-i18n="switchDec">Ondalık</span>
-          <div class="slide-track" role="radiogroup" aria-label="Ondalık yuvarlama modu">
-            <button type="button" id="dec-f" class="slide-opt active" data-dec="F" role="radio" aria-checked="true" title="Serbest ondalık / Float">F</button>
-            <button type="button" id="dec-2" class="slide-opt" data-dec="2" role="radio" aria-checked="false" title="2 ondalık / 2 decimals">2</button>
-            <button type="button" id="dec-0" class="slide-opt" data-dec="0" role="radio" aria-checked="false" title="Tam sayı / Integer">0</button>
+      <section class="calculator" aria-label="12 haneli esnaf hesap makinesi">
+        <!-- Subtle foreshadowing detail from Episode 1 -> Episode 5! -->
+        <span class="calc-star-scratch" title="★ 2066" aria-hidden="true">✦</span>
+
+        <!-- Upper Faceplate & LCD -->
+        <div class="calc-head">
+          <div class="calc-brand-row">
+            <div class="brand-plate">
+              <div class="brand-name">
+                <span class="brand-logo">ESNAF</span>
+                <span class="brand-model">120D</span>
+              </div>
+              <span class="brand-spec" data-i18n="brandSpec">12 Haneli Masaüstü</span>
+            </div>
+            <div class="solar-unit" aria-hidden="true">
+              <div class="solar-panel">
+                <span class="solar-cell"></span>
+                <span class="solar-cell"></span>
+                <span class="solar-cell"></span>
+                <span class="solar-cell"></span>
+              </div>
+              <span class="solar-caption">Two Way Power</span>
+            </div>
+          </div>
+
+          <div class="lcd-bezel">
+            <div
+              id="lcd-screen"
+              class="lcd-screen"
+              role="button"
+              tabindex="0"
+              title="Sonucu kopyalamak için ekrana tıklayın"
+              aria-label="Hesap makinesi ekranı"
+            >
+              <div class="lcd-status-row">
+                <div class="lcd-flags" aria-label="Durum göstergeleri">
+                  <span id="flag-m" class="lcd-flag" aria-hidden="true">M</span>
+                  <span id="flag-gt" class="lcd-flag" aria-hidden="true">GT</span>
+                  <span id="flag-kdv" class="lcd-flag" aria-hidden="true">KDV</span>
+                  <span id="flag-err" class="lcd-flag flag-error" aria-hidden="true">E</span>
+                </div>
+                <div id="lcd-subline" class="lcd-subline" aria-live="off"></div>
+              </div>
+              <div class="lcd-main-row">
+                <div class="lcd-op-col">
+                  <span id="lcd-operator" class="lcd-operator" aria-hidden="true"></span>
+                </div>
+                <div class="lcd-digits-wrap">
+                  <output id="lcd-value" class="lcd-value" aria-live="polite">0</output>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="switch-group">
-          <span class="switch-label" data-i18n="switchTax">KDV</span>
-          <div class="slide-track" role="radiogroup" aria-label="KDV oranı seçimi">
-            <button type="button" id="kdv-1" class="slide-opt" data-kdv="1" role="radio" aria-checked="false">%1</button>
-            <button type="button" id="kdv-10" class="slide-opt" data-kdv="10" role="radio" aria-checked="false">%10</button>
-            <button type="button" id="kdv-20" class="slide-opt active" data-kdv="20" role="radio" aria-checked="true">%20</button>
+        <!-- Hardware Slide Switches -->
+        <div class="calc-switches">
+          <div class="switch-group">
+            <span class="switch-label" data-i18n="switchDec">Ondalık</span>
+            <div class="slide-track" role="radiogroup" aria-label="Ondalık yuvarlama modu">
+              <button type="button" id="dec-f" class="slide-opt active" data-dec="F" role="radio" aria-checked="true" title="Serbest ondalık / Float">F</button>
+              <button type="button" id="dec-2" class="slide-opt" data-dec="2" role="radio" aria-checked="false" title="2 ondalık / 2 decimals">2</button>
+              <button type="button" id="dec-0" class="slide-opt" data-dec="0" role="radio" aria-checked="false" title="Tam sayı / Integer">0</button>
+            </div>
+          </div>
+
+          <div class="switch-group">
+            <span class="switch-label" data-i18n="switchTax">KDV</span>
+            <div class="slide-track" role="radiogroup" aria-label="KDV oranı seçimi">
+              <button type="button" id="kdv-1" class="slide-opt" data-kdv="1" role="radio" aria-checked="false">%1</button>
+              <button type="button" id="kdv-10" class="slide-opt" data-kdv="10" role="radio" aria-checked="false">%10</button>
+              <button type="button" id="kdv-20" class="slide-opt active" data-kdv="20" role="radio" aria-checked="true">%20</button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Tactile Keypad -->
-      <div class="calc-keypad">
-        <!-- Top Slim Function Row -->
-        <div class="keys-slim">
-          <button type="button" id="key-gt" class="key key-fn" data-action="gt" title="Genel Toplam / Grand Total">GT</button>
-          <button type="button" id="key-mu" class="key key-fn" data-action="mu" title="Kâr Marjı / Mark-Up">MU</button>
-          <button type="button" id="key-kdv-minus" class="key key-fn key-kdv" data-action="kdv-minus" title="KDV Çıkar / Strip Tax">KDV−</button>
-          <button type="button" id="key-kdv-plus" class="key key-fn key-kdv" data-action="kdv-plus" title="KDV Ekle / Add Tax">KDV+</button>
-          <button type="button" id="key-backspace" class="key key-fn" data-action="backspace" aria-label="Son haneyi sil" title="Son haneyi sil (Backspace)">▶</button>
+        <!-- Tactile Keypad -->
+        <div class="calc-keypad">
+          <!-- Top Slim Function Row -->
+          <div class="keys-slim">
+            <button type="button" id="key-gt" class="key key-fn" data-action="gt" title="Genel Toplam / Grand Total">GT</button>
+            <button type="button" id="key-mu" class="key key-fn" data-action="mu" title="Kâr Marjı / Mark-Up">MU</button>
+            <button type="button" id="key-kdv-minus" class="key key-fn key-kdv" data-action="kdv-minus" title="KDV Çıkar / Strip Tax">KDV−</button>
+            <button type="button" id="key-kdv-plus" class="key key-fn key-kdv" data-action="kdv-plus" title="KDV Ekle / Add Tax">KDV+</button>
+            <button type="button" id="key-backspace" class="key key-fn" data-action="backspace" aria-label="Son haneyi sil" title="Son haneyi sil (Backspace)">▶</button>
+          </div>
+
+          <!-- Main 5x5 Shop Keypad -->
+          <div class="keys-main">
+            <button type="button" id="key-mrc" class="key key-fn" data-action="mrc" title="Hafıza / Memory Recall-Clear">MRC</button>
+            <button type="button" id="key-m-minus" class="key key-fn" data-action="m-minus" title="Hafızadan çıkar / Memory Minus">M−</button>
+            <button type="button" id="key-m-plus" class="key key-fn" data-action="m-plus" title="Hafızaya ekle / Memory Plus">M+</button>
+            <button type="button" id="key-ce" class="key key-ce" data-action="ce" title="Son girişi temizle (Delete)">CE</button>
+            <button type="button" id="key-ac" class="key key-ac" data-action="ac" title="Tüm işlemi sıfırla (Esc)">AC</button>
+
+            <button type="button" id="key-7" class="key key-num" data-digit="7">7</button>
+            <button type="button" id="key-8" class="key key-num" data-digit="8">8</button>
+            <button type="button" id="key-9" class="key key-num" data-digit="9">9</button>
+            <button type="button" id="key-div" class="key key-op" data-op="/" aria-label="Böl">÷</button>
+            <button type="button" id="key-pct" class="key key-op key-pct" data-action="percent" aria-label="Yüzde">%</button>
+
+            <button type="button" id="key-4" class="key key-num" data-digit="4">4</button>
+            <button type="button" id="key-5" class="key key-num key-five" data-digit="5">5</button>
+            <button type="button" id="key-6" class="key key-num" data-digit="6">6</button>
+            <button type="button" id="key-mul" class="key key-op" data-op="*" aria-label="Çarp">×</button>
+            <button type="button" id="key-sign" class="key key-op key-sign" data-action="sign" aria-label="İşaret değiştir">+/−</button>
+
+            <button type="button" id="key-1" class="key key-num" data-digit="1">1</button>
+            <button type="button" id="key-2" class="key key-num" data-digit="2">2</button>
+            <button type="button" id="key-3" class="key key-num" data-digit="3">3</button>
+            <button type="button" id="key-add" class="key key-op key-plus" data-op="+" aria-label="Topla">+</button>
+            <button type="button" id="key-sub" class="key key-op" data-op="-" aria-label="Çıkar">−</button>
+
+            <button type="button" id="key-0" class="key key-num" data-digit="0">0</button>
+            <button type="button" id="key-00" class="key key-num" data-action="00">00</button>
+            <button type="button" id="key-dot" class="key key-num" data-action="decimal" aria-label="Ondalık">,</button>
+            <button type="button" id="key-eq" class="key key-eq" data-action="equals" aria-label="Eşittir">=</button>
+          </div>
         </div>
-
-        <!-- Main 5x5 Shop Keypad -->
-        <div class="keys-main">
-          <!-- Row 1: Memory + Clear -->
-          <button type="button" id="key-mrc" class="key key-fn" data-action="mrc" title="Hafıza / Memory Recall-Clear">MRC</button>
-          <button type="button" id="key-m-minus" class="key key-fn" data-action="m-minus" title="Hafızadan çıkar / Memory Minus">M−</button>
-          <button type="button" id="key-m-plus" class="key key-fn" data-action="m-plus" title="Hafızaya ekle / Memory Plus">M+</button>
-          <button type="button" id="key-ce" class="key key-ce" data-action="ce" title="Son girişi temizle (Delete)">CE</button>
-          <button type="button" id="key-ac" class="key key-ac" data-action="ac" title="Tüm işlemi sıfırla (Esc)">AC</button>
-
-          <!-- Row 2 -->
-          <button type="button" id="key-7" class="key key-num" data-digit="7">7</button>
-          <button type="button" id="key-8" class="key key-num" data-digit="8">8</button>
-          <button type="button" id="key-9" class="key key-num" data-digit="9">9</button>
-          <button type="button" id="key-div" class="key key-op" data-op="/" aria-label="Böl">÷</button>
-          <button type="button" id="key-pct" class="key key-op key-pct" data-action="percent" aria-label="Yüzde">%</button>
-
-          <!-- Row 3 -->
-          <button type="button" id="key-4" class="key key-num" data-digit="4">4</button>
-          <button type="button" id="key-5" class="key key-num key-five" data-digit="5">5</button>
-          <button type="button" id="key-6" class="key key-num" data-digit="6">6</button>
-          <button type="button" id="key-mul" class="key key-op" data-op="*" aria-label="Çarp">×</button>
-          <button type="button" id="key-sign" class="key key-op key-sign" data-action="sign" aria-label="İşaret değiştir">+/−</button>
-
-          <!-- Row 4 -->
-          <button type="button" id="key-1" class="key key-num" data-digit="1">1</button>
-          <button type="button" id="key-2" class="key key-num" data-digit="2">2</button>
-          <button type="button" id="key-3" class="key key-num" data-digit="3">3</button>
-          <button type="button" id="key-add" class="key key-op key-plus" data-op="+" aria-label="Topla">+</button>
-          <button type="button" id="key-sub" class="key key-op" data-op="-" aria-label="Çıkar">−</button>
-
-          <!-- Row 5 -->
-          <button type="button" id="key-0" class="key key-num" data-digit="0">0</button>
-          <button type="button" id="key-00" class="key key-num" data-action="00">00</button>
-          <button type="button" id="key-dot" class="key key-num" data-action="decimal" aria-label="Ondalık">,</button>
-          <button type="button" id="key-eq" class="key key-eq" data-action="equals" aria-label="Eşittir">=</button>
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
     <!-- Optional Thermal Receipt Tape (Kasa Fişi) -->
     <aside id="receipt-panel" class="receipt-panel" aria-label="Kasa fişi işlem geçmişi" hidden>
@@ -226,6 +257,9 @@
 
   <footer id="desk-hint" class="desk-hint"></footer>
 
+  <!-- Trophy Receipt Achievement Toast -->
+  <div id="trophy-toast" class="trophy-toast" role="status" aria-live="polite" hidden></div>
+
   <!-- Tuş Rehberi Modal -->
   <div id="guide-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="guide-title" hidden>
     <div class="modal-card">
@@ -240,8 +274,9 @@
 
   <script src="./i18n.js"></script>
   <script src="./audio.js"></script>
-  <script src="./portraits.js"></script>
+  <script src="./stage.js"></script>
   <script src="./story.js"></script>
+  <script src="./dojo.js"></script>
   <script src="./app.js"></script>
   <script src="./game.js"></script>
 </body>
