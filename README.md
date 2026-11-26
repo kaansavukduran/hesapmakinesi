@@ -1,32 +1,31 @@
-# KASA 120D — Esnaf Hesap Makinesi & Hikâye Oyunu (`v2.0.0`)
+# KASA 120D — Canlı Esnaf Hesap Makinesi, Hikâye Oyunu & Tuş Atölyesi (`v3.0.0`)
 
-Klasik **12 haneli masaüstü esnaf hesap makinesi** ve gerçek hesap makinesi ustalığını öğreten **5 bölümlük, çift dilli (TR / EN), gerilim müzikli hikâye oyunu**. Saf HTML, CSS ve JavaScript ile yazılmıştır; sıfır bağımlılıkla doğrudan **GitHub Pages** üzerinde çalışır.
+Klasik **12 haneli masaüstü esnaf hesap makinesi** üzerine kurulu; **canlı 16:9 animasyonlu tezgâh sahnesi**, **karakterlere özel müzik temaları (Usta'ya özel Uzak Doğu Zen, Mafya Mandolin Noir, CERN & Olay Ufku)**, **Usta Gözü (X-Ray) canlı hafıza görselleştiricisi**, **8 becerili Tuş Atölyesi (Key Dojo)** ve **Esnaf Rush** sonsuz moduyla gerçek hesap makinesi ustalığını öğreten çift dilli (TR / EN) web oyunu.
 
 🌐 **Canlı Site / Live Demo:** https://kaansavukduran.github.io/hesapmakinesi/
 
 ---
 
-## Hikâye Modu: *Bir Kuruşun Kaderi / The Fate of One Cent*
+## `v3.0.0` Yenilikleri
 
-1. **Bölüm 1 — Sıradan Bir Salı / *Just Another Tuesday*** (Mahalle Bakkalı)
-   - Öğretilen tuşlar: `+`, `−`, `×`, `00`, `▶`, `CE`, `AC`, `KDV+`, ondalık hassasiyet (`0,01`).
-2. **Bölüm 2 — Bodrumdaki Muhasebe / *Basement Ledger*** (Mafya Bodrumu)
-   - Öğretilen tuşlar: `%` (zam / iskonto), `KDV−` (`%10`), `GT` (Genel Toplam).
-3. **Bölüm 3 — Altın Oran Sendikası / *The Golden Ratio Syndicate*** (Yeraltı Borsası & Plot Twist #1)
-   - Öğretilen tuşlar: `MU` (Kâr Marjı / Satış Fiyatı), `M+`, `M−`, `MRC`, `+/−`.
-4. **Bölüm 4 — Cenevre'de 12 Hane / *12 Digits in Geneva*** (CERN Yeraltı Laboratuvarı)
-   - Öğretilen tuşlar: `F · 2 · 0` ondalık yuvarlama anahtarları, zincirleme kombo & hafıza.
-5. **Bölüm 5 — Uzay-Zaman Fişi / *The Spacetime Receipt*** (Olay Ufku & Büyük Plot Twist #2)
-   - Öğretilen tuşlar: Tüm tuşların zamana karşı final sınavı ve 0,01 kuruşluk paradoksun çözümü.
-
-### Öne Çıkan Özellikler
-
-- **Usta (12 Haneli Bilge):** Hikâye boyunca belirip felsefi nasihatler ve pratik tuş dersleri verir; anlattığı tuşlar hesap makinesinde parlayarak gösterilir.
-- **Dinamik Gerilim Müziği (Web Audio API):** Hiçbir harici ses dosyası olmadan dükkan atmosferi, fırtına, mafya bodrumu, CERN uğultusu ve süre azaldıkça hızlanan kalp atışı üretir.
-- **Tam Çift Dil (TR / EN):** Üst çubuktan tek tıkla Türkçe ve İngilizce arasında anında geçiş (sayı/ondalık biçimi, para birimi, KDV/TAX tuşları ve tüm diyaloglar dahil).
-- **Serbest Hesap Makinesi Modu:** İstediğiniz an üst çubuktan **Serbest / Free Calc** moduna geçip klasik 12 haneli esnaf hesap makinesini Kasa Fişi ile birlikte kullanabilirsiniz.
+- **Canlı 16:9 Tezgâh Sahnesi & Animasyonlu Karakterler ([stage.js](file:///home/antigravity/kaansavukduran/hesapmakinesi/stage.js)):**
+  - 7 özel illüstrasyon mekân arka planı (Mahalle Bakkalı, Fırtınalı Gece Bakkalı, Mafya Bodrumu, Altın Oran Sendikası, CERN Kontrol Odası, Olay Ufku Kara Delik ve Usta'nın Uzak Doğu Zen Dojosu).
+  - Kapıdan yürüyerek gelen, nefes alan, göz kırpan, konuşurken dudak oynatan, sabırsızlanan ve mutlu/sinirli tepki veren çok katmanlı animasyonlu SVG karakterler.
+  - Tezgâha inen fiziksel ürünler (ekmek, süt, kahve kolisi, siyah zarf, 2066 tarihli 1 kuruş, para çantaları, bobinler, kapsül), açılan kasa çekmecesi, uçan para üstü banknotları ve kombo partikülleri!
+- **Karakter & Fraksiyon Müzik Temaları ([audio.js](file:///home/antigravity/kaansavukduran/hesapmakinesi/audio.js)):**
+  - **Usta — Uzak Doğu Zen Teması:** Japon pentatonik gamında çekmeli Koto teli, nefesli Shakuhachi bambu flüt, bronz tapınak gongu ve bambu su vurması.
+  - **Mafya / Don Kuruş:** Karanlık Mandolin Tremolo Noir & kontrbas.
+  - **Bay Gölge (Yağmurlu Noir), Sendika (Soygun Synth-Jazz + Siren), CERN ve Olay Ufku.**
+- **Derin Anlamlı 5 Bölümlük Hikâye & Absürt Komik Ara Sahneler ([story.js](file:///home/antigravity/kaansavukduran/hesapmakinesi/story.js)):**
+  - Etkileşimli oyuncu seçenekli Usta felsefe sohbetleri, bölüm bölüm örülen ipuçları (sol köşedeki yıldız çiziği, 2066 kuruşu, Prof. Kuruş'un trajedisi) ve iki büyük Plot Twist!
+- **Gerçek Hesap Makinesi Öğretim Sistemi ([dojo.js](file:///home/antigravity/kaansavukduran/hesapmakinesi/dojo.js)):**
+  - **Usta Gözü (X-Ray):** `M`, `GT` ve bekleyen işlemleri canlı gösteren teknik hafıza şeridi.
+  - **Adım Adım Tuş Rehberi** + **Usta Hamle Sayacı (Par)** + *"Dükkânda Ne İşe Yarar?"* gerçek hayat kartları.
+  - **Tuş Atölyesi (Key Dojo):** `00`, `▶/CE`, `%`, `KDV+/−`, `GT`, `MU`, `M+/MRC`, `F·2·0` için 8 modüllü, 3 yıldızlı pratik salonu.
+  - **Esnaf Rush (Sonsuz Kasa Modu)** ve 8 adet **Koleksiyon Başarım Fişi**.
 
 ## Sürüm Geçmişi
 
-- **v2.0.0** — 5 bölümlük çift dilli (TR/EN) hikâye oyunu, Usta mentor sistemi, procedural Web Audio gerilim müziği ve SFX motoru, 6 atmosferik tema, özgün SVG karakter portreleri, tuş parlama rehberi ve bölüm ilerleme kaydı.
-- **v1.0.0** — Klasik 12 haneli ESNAF 120D masaüstü hesap makinesi (`GT`, `MU`, `KDV+/−`, `%`, `MRC`, `F·2·0`, Kasa Fişi ve klavye kısayolları).
+- **v3.0.0** — Canlı 16:9 sahne, 7 özel WebP mekân arka planı, animasyonlu SVG karakterler & tezgâh objeleri, VFX/Juice efektleri, Uzak Doğu Usta & Mafya Mandolin müzik temaları, etkileşimli Usta sohbetleri, Usta Gözü (X-Ray), 8 modüllü Tuş Atölyesi (Key Dojo), Esnaf Rush ve Başarım Fişleri.
+- **v2.0.0** — 5 bölümlük çift dilli (TR/EN) hikâye modu, gerilim müzikleri, 6 atmosferik tema ve tuş parlama rehberi.
+- **v1.0.0** — Klasik 12 haneli ESNAF 120D masaüstü hesap makinesi (`GT`, `MU`, `KDV+/−`, `%`, `MRC`, `F·2·0`, Kasa Fişi).

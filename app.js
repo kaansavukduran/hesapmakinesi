@@ -992,6 +992,15 @@
       }
     }
     renderAll();
+
+    const SPARK_KEYS = ["00", "ce", "kdv-plus", "kdv-minus", "gt", "mu", "m-plus", "m-minus", "mrc", "percent", "sign"];
+    if (SPARK_KEYS.includes(keyCode)) {
+      btn.classList.remove("key-spark");
+      void btn.offsetWidth;
+      btn.classList.add("key-spark");
+      setTimeout(() => btn.classList.remove("key-spark"), 420);
+    }
+
     emitAction({
       type: "key",
       key: keyCode,
