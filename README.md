@@ -1,22 +1,32 @@
-# Esnaf Hesap Makinesi
+# KASA 120D — Esnaf Hesap Makinesi & Hikâye Oyunu (`v2.0.0`)
 
-Dükkanlarda ve esnaf kasalarında kullanılan klasik **12 haneli masaüstü hesap makinesi** deneyimini doğrudan tarayıcıya getiren, saf HTML, CSS ve JavaScript ile yazılmış hafif bir web uygulaması. Herhangi bir derleme (build) adımı gerektirmez; doğrudan **GitHub Pages** üzerinden açılabilir.
+Klasik **12 haneli masaüstü esnaf hesap makinesi** ve gerçek hesap makinesi ustalığını öğreten **5 bölümlük, çift dilli (TR / EN), gerilim müzikli hikâye oyunu**. Saf HTML, CSS ve JavaScript ile yazılmıştır; sıfır bağımlılıkla doğrudan **GitHub Pages** üzerinde çalışır.
 
-## Özellikler
+🌐 **Canlı Site / Live Demo:** https://kaansavukduran.github.io/hesapmakinesi/
 
-- **Klasik Esnaf Tuş Dizilimi:** Büyük `+` tuşu, `00` çift sıfır tuşu, tek hane silme (`▶`), `CE` ve `AC`.
-- **GT (Genel Toplam):** Her `=` sonucunu otomatik biriktirir. İlk basışta toplamı gösterir, ikinci basışta sıfırlar.
-- **MU (Kâr Marjı):** Maliyetten hedeflenen kâr marjına göre satış fiyatı (`100 ÷ 20 MU` → `125`) veya kâr oranı (`150 − 100 MU` → `%50`) hesabı.
-- **KDV+ / KDV−:** Türkiye KDV oranları (**%1, %10, %20**) için anında KDV ekleme ve KDV hariç tutar bulma.
-- **Yüzde (`%`) Hesapları:** Zam (`200 + 15 %` → `230`), iskonto (`200 − 15 %` → `170`) ve oran (`200 × 15 %` → `30`).
-- **Hafıza (`M+`, `M−`, `MRC`):** İşlem sonuçlarını hafızada toplama, çıkarma, çağırma ve temizleme.
-- **Ondalık Anahtarı (`F · 2 · 0`):** Serbest ondalık, 2 kuruş yuvarlaması veya tam sayı modu.
-- **Kasa Fişi (İşlem Geçmişi):** Yapılan işlemleri fiş formatında listeler; herhangi bir satıra tıklayarak sonucu ekrana geri alabilir veya tüm fişi kopyalayabilirsiniz.
-- **Klavye Desteği ve Tuş Sesi:** Fiziksel klavyeden rakamlar, `+ - * /`, `Enter`, `%`, `Backspace`, `Delete` ve `Esc` ile tam uyum; açılıp kapatılabilen hafif mekanik tuş tıklama sesi.
+---
 
-## GitHub Pages ile Yayınlama
+## Hikâye Modu: *Bir Kuruşun Kaderi / The Fate of One Cent*
 
-1. GitHub'da bu reponun **Settings → Pages** bölümüne gidin.
-2. **Source** altında **Deploy from a branch** seçeneğini seçin.
-3. Dal olarak `main`, klasör olarak `/ (root)` seçip **Save** butonuna tıklayın.
-4. Kısa süre içinde `https://kaansavukduran.github.io/hesapmakinesi/` adresinde yayına alınacaktır.
+1. **Bölüm 1 — Sıradan Bir Salı / *Just Another Tuesday*** (Mahalle Bakkalı)
+   - Öğretilen tuşlar: `+`, `−`, `×`, `00`, `▶`, `CE`, `AC`, `KDV+`, ondalık hassasiyet (`0,01`).
+2. **Bölüm 2 — Bodrumdaki Muhasebe / *Basement Ledger*** (Mafya Bodrumu)
+   - Öğretilen tuşlar: `%` (zam / iskonto), `KDV−` (`%10`), `GT` (Genel Toplam).
+3. **Bölüm 3 — Altın Oran Sendikası / *The Golden Ratio Syndicate*** (Yeraltı Borsası & Plot Twist #1)
+   - Öğretilen tuşlar: `MU` (Kâr Marjı / Satış Fiyatı), `M+`, `M−`, `MRC`, `+/−`.
+4. **Bölüm 4 — Cenevre'de 12 Hane / *12 Digits in Geneva*** (CERN Yeraltı Laboratuvarı)
+   - Öğretilen tuşlar: `F · 2 · 0` ondalık yuvarlama anahtarları, zincirleme kombo & hafıza.
+5. **Bölüm 5 — Uzay-Zaman Fişi / *The Spacetime Receipt*** (Olay Ufku & Büyük Plot Twist #2)
+   - Öğretilen tuşlar: Tüm tuşların zamana karşı final sınavı ve 0,01 kuruşluk paradoksun çözümü.
+
+### Öne Çıkan Özellikler
+
+- **Usta (12 Haneli Bilge):** Hikâye boyunca belirip felsefi nasihatler ve pratik tuş dersleri verir; anlattığı tuşlar hesap makinesinde parlayarak gösterilir.
+- **Dinamik Gerilim Müziği (Web Audio API):** Hiçbir harici ses dosyası olmadan dükkan atmosferi, fırtına, mafya bodrumu, CERN uğultusu ve süre azaldıkça hızlanan kalp atışı üretir.
+- **Tam Çift Dil (TR / EN):** Üst çubuktan tek tıkla Türkçe ve İngilizce arasında anında geçiş (sayı/ondalık biçimi, para birimi, KDV/TAX tuşları ve tüm diyaloglar dahil).
+- **Serbest Hesap Makinesi Modu:** İstediğiniz an üst çubuktan **Serbest / Free Calc** moduna geçip klasik 12 haneli esnaf hesap makinesini Kasa Fişi ile birlikte kullanabilirsiniz.
+
+## Sürüm Geçmişi
+
+- **v2.0.0** — 5 bölümlük çift dilli (TR/EN) hikâye oyunu, Usta mentor sistemi, procedural Web Audio gerilim müziği ve SFX motoru, 6 atmosferik tema, özgün SVG karakter portreleri, tuş parlama rehberi ve bölüm ilerleme kaydı.
+- **v1.0.0** — Klasik 12 haneli ESNAF 120D masaüstü hesap makinesi (`GT`, `MU`, `KDV+/−`, `%`, `MRC`, `F·2·0`, Kasa Fişi ve klavye kısayolları).
