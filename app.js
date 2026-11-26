@@ -57,8 +57,15 @@
     return Object.is(rounded, -0) ? 0 : cleanFloat(rounded);
   }
 
-  function addTurkishThousands(intStr) {
-    return intStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  function activeLang() {
+    if (typeof window !== "undefined" && window.EsnafI18n) {
+      return window.EsnafI18n.getLang();
+    }
+    return "tr";
+  }
+
+  function addThousands(intStr, sep) {
+    return intStr.replace(/\B(?=(\d{3})+(?!\d))/g, sep);
   }
 
   function numberToRawString(num, decMode) {
@@ -85,23 +92,27 @@
     return fixed;
   }
 
-  function formatTurkishDisplay(rawStr) {
+  function formatTurkishDisplay(rawStr, langOverride) {
     if (!rawStr) return "0";
+    const lang = langOverride || activeLang();
+    const thouSep = lang === "en" ? "," : ".";
+    const decSep = lang === "en" ? "." : ",";
     const isNeg = rawStr.startsWith("-");
     const unsigned = isNeg ? rawStr.slice(1) : rawStr;
     const parts = unsigned.split(".");
-    const intFormatted = addTurkishThousands(parts[0] || "0");
+    const intFormatted = addThousands(parts[0] || "0", thouSep);
     const prefix = isNeg ? "−" : "";
     if (parts.length > 1) {
-      return `${prefix}${intFormatted},${parts[1]}`;
+      return `${prefix}${intFormatted}${decSep}${parts[1]}`;
     }
     return `${prefix}${intFormatted}`;
   }
 
-  function formatNumberCompact(num, decMode) {
+  function formatNumberCompact(num, decMode, langOverride) {
     const raw = numberToRawString(num, decMode || "F");
-    if (raw === null) return "HATA";
-    return formatTurkishDisplay(raw);
+    const lang = langOverride || activeLang();
+    if (raw === null) return lang === "en" ? "ERROR" : "HATA";
+    return formatTurkishDisplay(raw, lang);
   }
 
   function countDigits(str) {
@@ -640,8 +651,24 @@
       state.receipt = [];
     }
 
+    function getNumericValue() {
+      if (state.error) return NaN;
+      return currentVal();
+    }
+
+    function resetForScene(mode) {
+      if (mode === "none") return;
+      clearAll();
+      if (mode === "clear-gt") {
+        state.grandTotal = 0;
+      } else if (mode === "clear-all-mem") {
+        state.memory = 0;
+        state.grandTotal = 0;
+      }
+    }
+
     function getDisplayText() {
-      if (state.error) return "HATA";
+      if (state.error) return activeLang() === "en" ? "ERROR" : "HATA";
       return formatTurkishDisplay(state.inputStr);
     }
 
@@ -654,6 +681,7 @@
       toggleSign,
       clearEntry,
       clearAll,
+      resetForScene,
       setOperator,
       equals,
       percent,
@@ -666,6 +694,7 @@
       setDecMode,
       setKdvRate,
       clearReceipt,
+      getNumericValue,
       getDisplayText,
     };
   }
@@ -682,7 +711,7 @@
   }
 
   /* =========================================================
-     TACTILE KEY CLICK SOUND (WEB AUDIO API)
+     TACTILE KEY CLICK SOUND (DELEGATES TO EsnafAudio IF PRESENT)
      ========================================================= */
   let audioCtx = null;
   let soundEnabled = loadSetting(STORAGE_KEYS.sound, true);
@@ -700,12 +729,15 @@
   function saveSetting(key, value) {
     try {
       localStorage.setItem(key, JSON.stringify(value));
-    } catch (_) {
-      // ignore storage quota errors
-    }
+    } catch (_) {}
   }
 
   function playKeyClick(isHeavy) {
+    if (window.EsnafAudio) {
+      window.EsnafAudio.unlock();
+      window.EsnafAudio.keyClick(isHeavy);
+      return;
+    }
     if (!soundEnabled) return;
     try {
       if (!audioCtx) {
@@ -713,30 +745,20 @@
         if (!Ctx) return;
         audioCtx = new Ctx();
       }
-      if (audioCtx.state === "suspended") {
-        audioCtx.resume();
-      }
-
+      if (audioCtx.state === "suspended") audioCtx.resume();
       const now = audioCtx.currentTime;
-
-      // Crisp short plastic keycap click
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = "triangle";
-      const baseFreq = isHeavy ? 210 : 310;
-      osc.frequency.setValueAtTime(baseFreq, now);
+      osc.frequency.setValueAtTime(isHeavy ? 210 : 310, now);
       osc.frequency.exponentialRampToValueAtTime(65, now + 0.024);
-
       gain.gain.setValueAtTime(0.085, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.026);
-
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start(now);
       osc.stop(now + 0.028);
-    } catch (_) {
-      // Audio unavailable
-    }
+    } catch (_) {}
   }
 
   /* =========================================================
@@ -748,6 +770,13 @@
     receipt: loadSetting(STORAGE_KEYS.receipt, []),
   });
 
+  const actionListeners = [];
+  function emitAction(payload) {
+    actionListeners.forEach((cb) => {
+      try { cb(payload); } catch (_) {}
+    });
+  }
+
   const dom = {
     lcdScreen: document.getElementById("lcd-screen"),
     lcdValue: document.getElementById("lcd-value"),
@@ -757,6 +786,10 @@
     flagGT: document.getElementById("flag-gt"),
     flagKDV: document.getElementById("flag-kdv"),
     flagErr: document.getElementById("flag-err"),
+
+    keyDot: document.getElementById("key-dot"),
+    keyKdvMinus: document.getElementById("key-kdv-minus"),
+    keyKdvPlus: document.getElementById("key-kdv-plus"),
 
     btnSound: document.getElementById("btn-sound"),
     soundWave1: document.getElementById("sound-wave-1"),
@@ -781,6 +814,10 @@
 
   let copyToastTimer = null;
 
+  function tr(key, fallback) {
+    return window.EsnafI18n ? window.EsnafI18n.t(key) : fallback;
+  }
+
   function renderDisplay() {
     const s = engine.state;
     const text = engine.getDisplayText();
@@ -801,6 +838,13 @@
     dom.flagGT.classList.toggle("active", s.grandTotal !== 0);
     dom.flagKDV.classList.toggle("active", s.kdvActive);
     dom.flagErr.classList.toggle("active", s.error);
+
+    if (dom.keyDot) {
+      dom.keyDot.textContent = activeLang() === "en" ? "." : ",";
+    }
+    if (dom.keyKdvMinus) dom.keyKdvMinus.textContent = tr("keyTaxMinus", "KDV−");
+    if (dom.keyKdvPlus) dom.keyKdvPlus.textContent = tr("keyTaxPlus", "KDV+");
+    if (dom.flagKDV) dom.flagKDV.textContent = tr("flagTax", "KDV");
   }
 
   function renderSwitches() {
@@ -818,9 +862,10 @@
   }
 
   function renderSoundButton() {
-    dom.btnSound.setAttribute("aria-pressed", String(soundEnabled));
-    dom.soundWave1.style.opacity = soundEnabled ? "1" : "0.18";
-    dom.soundWave2.style.opacity = soundEnabled ? "1" : "0.18";
+    const enabled = window.EsnafAudio ? window.EsnafAudio.isSfxEnabled() : soundEnabled;
+    dom.btnSound.setAttribute("aria-pressed", String(enabled));
+    dom.soundWave1.style.opacity = enabled ? "1" : "0.18";
+    dom.soundWave2.style.opacity = enabled ? "1" : "0.18";
   }
 
   function renderReceipt() {
@@ -838,7 +883,7 @@
     if (items.length === 0) {
       const empty = document.createElement("li");
       empty.className = "receipt-empty";
-      empty.innerHTML = "Henüz işlem yok.<br />Yaptığınız hesaplar burada fiş gibi sıralanır.";
+      empty.innerHTML = tr("receiptEmpty", "Henüz işlem yok.<br />Yaptığınız hesaplar burada fiş gibi sıralanır.");
       dom.receiptList.appendChild(empty);
       return;
     }
@@ -849,7 +894,6 @@
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "receipt-item";
-      btn.title = "Bu sonucu ekrana geri almak için tıklayın";
 
       const exprEl = document.createElement("span");
       exprEl.className = "receipt-expr";
@@ -857,7 +901,7 @@
 
       const resEl = document.createElement("span");
       resEl.className = "receipt-res";
-      resEl.textContent = item.resultFormatted;
+      resEl.textContent = formatNumberCompact(item.result, engine.state.decMode);
 
       btn.appendChild(exprEl);
       btn.appendChild(resEl);
@@ -865,6 +909,7 @@
         playKeyClick(false);
         engine.recallNumber(item.result);
         renderAll();
+        emitAction({ type: "recall", key: "recall", value: engine.getNumericValue(), state: engine.state });
       });
 
       li.appendChild(btn);
@@ -889,11 +934,15 @@
     const isHeavy = action === "equals" || action === "ac" || op === "+";
     playKeyClick(isHeavy);
 
+    let keyCode = "";
     if (digit !== undefined) {
       engine.inputDigit(digit);
+      keyCode = digit;
     } else if (op !== undefined) {
       engine.setOperator(op);
+      keyCode = op;
     } else {
+      keyCode = action || "";
       switch (action) {
         case "00":
           engine.inputDoubleZero();
@@ -943,6 +992,14 @@
       }
     }
     renderAll();
+    emitAction({
+      type: "key",
+      key: keyCode,
+      buttonId: btn.id,
+      value: engine.getNumericValue(),
+      display: engine.getDisplayText(),
+      state: engine.state,
+    });
   }
 
   /* Keypad click delegation */
@@ -959,6 +1016,7 @@
       engine.setDecMode(btn.dataset.dec);
       saveSetting(STORAGE_KEYS.decMode, engine.state.decMode);
       renderAll();
+      emitAction({ type: "dec", key: "dec-" + btn.dataset.dec, decMode: engine.state.decMode, value: engine.getNumericValue(), state: engine.state });
     });
   });
 
@@ -968,6 +1026,7 @@
       engine.setKdvRate(btn.dataset.kdv);
       saveSetting(STORAGE_KEYS.kdvRate, engine.state.kdvRate);
       renderAll();
+      emitAction({ type: "kdv", key: "kdv-" + btn.dataset.kdv, kdvRate: engine.state.kdvRate, value: engine.getNumericValue(), state: engine.state });
     });
   });
 
@@ -979,7 +1038,7 @@
 
     navigator.clipboard.writeText(text).then(() => {
       const prevSub = engine.state.subline;
-      dom.lcdSubline.textContent = "Kopyalandı ✓";
+      dom.lcdSubline.textContent = tr("copied", "Kopyalandı ✓");
       clearTimeout(copyToastTimer);
       copyToastTimer = setTimeout(() => {
         dom.lcdSubline.textContent = engine.state.subline === prevSub ? prevSub : engine.state.subline;
@@ -997,8 +1056,14 @@
 
   /* Topbar controls */
   dom.btnSound.addEventListener("click", () => {
-    soundEnabled = !soundEnabled;
-    saveSetting(STORAGE_KEYS.sound, soundEnabled);
+    if (window.EsnafAudio) {
+      const next = !window.EsnafAudio.isSfxEnabled();
+      window.EsnafAudio.setSfxEnabled(next);
+      soundEnabled = next;
+    } else {
+      soundEnabled = !soundEnabled;
+      saveSetting(STORAGE_KEYS.sound, soundEnabled);
+    }
     renderSoundButton();
     if (soundEnabled) playKeyClick(false);
   });
@@ -1028,14 +1093,14 @@
     const lines = items
       .slice()
       .reverse()
-      .map((item) => `${item.expr} ${item.resultFormatted}`);
+      .map((item) => `${item.expr} ${formatNumberCompact(item.result, engine.state.decMode)}`);
     lines.push("------------------------");
-    lines.push(`GENEL TOPLAM (GT): ${formatNumberCompact(engine.state.grandTotal, engine.state.decMode)}`);
+    lines.push(`${tr("receiptGtLabel", "GENEL TOPLAM (GT)")}: ${formatNumberCompact(engine.state.grandTotal, engine.state.decMode)}`);
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(lines.join("\n")).then(() => {
         const orig = dom.btnReceiptCopy.textContent;
-        dom.btnReceiptCopy.textContent = "Kopyalandı ✓";
+        dom.btnReceiptCopy.textContent = tr("copied", "Kopyalandı ✓");
         setTimeout(() => {
           dom.btnReceiptCopy.textContent = orig;
         }, 1400);
@@ -1095,6 +1160,10 @@
       return;
     }
 
+    if (window.EsnafGame && window.EsnafGame.handleGlobalKeydown && window.EsnafGame.handleGlobalKeydown(e)) {
+      return;
+    }
+
     if (e.ctrlKey || e.metaKey || e.altKey) return;
 
     const targetId = KEY_TO_ID[e.key];
@@ -1107,7 +1176,79 @@
     handleButtonElement(btn);
   });
 
+  /* Highlighting & Glitch Helpers for Story Mode */
+  function clearHighlights() {
+    document.querySelectorAll(".key-hint-pulse").forEach((el) => {
+      el.classList.remove("key-hint-pulse");
+    });
+  }
+
+  function highlightKeys(ids) {
+    clearHighlights();
+    if (!Array.isArray(ids)) return;
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add("key-hint-pulse");
+    });
+  }
+
+  function triggerGlitch() {
+    dom.lcdScreen.classList.remove("lcd-glitch");
+    void dom.lcdScreen.offsetWidth;
+    dom.lcdScreen.classList.add("lcd-glitch");
+    setTimeout(() => dom.lcdScreen.classList.remove("lcd-glitch"), 650);
+  }
+
+  function runPresetKeys(keys) {
+    engine.clearAll();
+    (keys || []).forEach((k) => {
+      if (/^[0-9]$/.test(k)) engine.inputDigit(k);
+      else if (k === "00") engine.inputDoubleZero();
+      else if (k === "." || k === ",") engine.inputDecimal();
+      else if (["+", "-", "*", "/"].includes(k)) engine.setOperator(k);
+      else if (k === "=") engine.equals();
+    });
+    renderAll();
+  }
+
+  if (window.EsnafI18n) {
+    window.EsnafI18n.onLangChange(() => {
+      renderAll();
+    });
+  }
+
+  /* Public Bridge API for Story Engine */
+  window.EsnafCalc = {
+    engine,
+    getNumericValue: () => engine.getNumericValue(),
+    getDisplayText: () => engine.getDisplayText(),
+    getDecMode: () => engine.state.decMode,
+    setDecMode: (mode) => {
+      engine.setDecMode(mode);
+      renderAll();
+    },
+    getKdvRate: () => engine.state.kdvRate,
+    setKdvRate: (rate) => {
+      engine.setKdvRate(rate);
+      renderAll();
+    },
+    reset: (mode) => {
+      engine.resetForScene(mode || "all");
+      renderAll();
+    },
+    runPresetKeys,
+    onAction: (cb) => {
+      if (typeof cb === "function") actionListeners.push(cb);
+    },
+    highlightKeys,
+    clearHighlights,
+    triggerGlitch,
+    setReceiptOpen,
+    renderAll,
+  };
+
   /* Initial Render */
   renderSoundButton();
   renderAll();
 })();
+

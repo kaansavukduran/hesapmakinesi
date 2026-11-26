@@ -3,29 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Esnaf Hesap Makinesi — 12 Haneli Masaüstü Hesap Makinesi</title>
-  <meta name="description" content="Dükkanlarda ve esnaf kasalarında kullanılan klasik 12 haneli masaüstü hesap makinesi. GT genel toplam, MU kâr marjı, KDV ekleme/çıkarma, hafıza tuşları ve kasa fişi geçmişi." />
+  <title>KASA 120D — Esnaf Hesap Makinesi & Hikâye Oyunu</title>
+  <meta name="description" content="Klasik 12 haneli masaüstü esnaf hesap makinesi ve 5 bölümlük çift dilli (TR/EN) hikâyeli ustalık oyunu: Mahalle bakkalından mafya bodrumuna, CERN'den uzay-zaman bükülmesine!" />
   <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600&family=IBM+Plex+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./style.css" />
 </head>
-<body>
+<body data-theme="shop-day" class="mode-story">
   <header class="topbar">
     <div class="topbar-brand">
-      <h1 class="topbar-title">Esnaf Hesap Makinesi</h1>
-      <span class="topbar-subtitle">Klasik 12 haneli masaüstü</span>
+      <h1 class="topbar-title" data-i18n="brandTitle">Esnaf Hesap Makinesi</h1>
+      <span class="version-tag" data-i18n="appVersion">v2.0.0</span>
+      <span class="topbar-subtitle" data-i18n="brandSubtitle">KASA 120D · Hikâye & Masaüstü</span>
     </div>
+
     <nav class="topbar-actions" aria-label="Araç çubuğu">
-      <button type="button" id="btn-sound" class="tool-btn" aria-pressed="true" title="Tuş sesini aç / kapat">
+      <div class="seg-group" role="group" aria-label="Oyun modu">
+        <button type="button" id="btn-mode-story" class="seg-btn active" aria-pressed="true" data-i18n="modeStory">Hikâye</button>
+        <button type="button" id="btn-mode-free" class="seg-btn" aria-pressed="false" data-i18n="modeFree">Serbest</button>
+      </div>
+
+      <div class="seg-group seg-lang" role="group" aria-label="Dil seçimi">
+        <button type="button" id="btn-lang-tr" class="seg-btn active">TR</button>
+        <button type="button" id="btn-lang-en" class="seg-btn">EN</button>
+      </div>
+
+      <button type="button" id="btn-music" class="tool-btn" aria-pressed="true" title="Gerilim müziğini aç / kapat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 18V5l12-2v13" />
+          <circle cx="6" cy="18" r="3" />
+          <circle cx="18" cy="16" r="3" />
+        </svg>
+        <span class="btn-label" data-i18n="btnMusic">Müzik</span>
+      </button>
+
+      <button type="button" id="btn-sound" class="tool-btn" aria-pressed="true" title="Tuş ve efekt seslerini aç / kapat">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
           <path id="sound-wave-1" d="M15.54 8.46a5 5 0 0 1 0 7.07" />
           <path id="sound-wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14" />
         </svg>
-        <span class="btn-label">Ses</span>
+        <span class="btn-label" data-i18n="btnSound">Ses</span>
       </button>
+
       <button type="button" id="btn-receipt" class="tool-btn" aria-pressed="false" aria-controls="receipt-panel" title="Kasa fişini göster / gizle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z" />
@@ -33,21 +55,26 @@
           <path d="M8 11h8" />
           <path d="M8 15h5" />
         </svg>
-        <span class="btn-label">Kasa Fişi</span>
+        <span class="btn-label" data-i18n="btnReceipt">Kasa Fişi</span>
         <span id="receipt-badge" class="badge-count" hidden>0</span>
       </button>
+
       <button type="button" id="btn-guide" class="tool-btn" title="Tuş rehberi ve kısayollar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="10" />
           <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
           <line x1="12" y1="17" x2="12.01" y2="17" />
         </svg>
-        <span class="btn-label">Rehber</span>
+        <span class="btn-label" data-i18n="btnGuide">Rehber</span>
       </button>
     </nav>
   </header>
 
   <main class="workspace">
+    <!-- Interactive 5-Episode Story Stage -->
+    <section id="story-stage" class="story-stage" aria-label="Hikâye sahnesi"></section>
+
+    <!-- Classic 12-Digit Shop Calculator -->
     <section class="calculator" aria-label="12 haneli esnaf hesap makinesi">
       <!-- Upper Faceplate & LCD -->
       <div class="calc-head">
@@ -57,7 +84,7 @@
               <span class="brand-logo">ESNAF</span>
               <span class="brand-model">120D</span>
             </div>
-            <span class="brand-spec">12 Haneli Masaüstü</span>
+            <span class="brand-spec" data-i18n="brandSpec">12 Haneli Masaüstü</span>
           </div>
           <div class="solar-unit" aria-hidden="true">
             <div class="solar-panel">
@@ -77,7 +104,7 @@
             role="button"
             tabindex="0"
             title="Sonucu kopyalamak için ekrana tıklayın"
-            aria-label="Hesap makinesi ekranı, kopyalamak için tıklayın"
+            aria-label="Hesap makinesi ekranı"
           >
             <div class="lcd-status-row">
               <div class="lcd-flags" aria-label="Durum göstergeleri">
@@ -103,16 +130,16 @@
       <!-- Hardware Slide Switches -->
       <div class="calc-switches">
         <div class="switch-group">
-          <span class="switch-label">Ondalık</span>
+          <span class="switch-label" data-i18n="switchDec">Ondalık</span>
           <div class="slide-track" role="radiogroup" aria-label="Ondalık yuvarlama modu">
-            <button type="button" id="dec-f" class="slide-opt active" data-dec="F" role="radio" aria-checked="true" title="Serbest ondalık">F</button>
-            <button type="button" id="dec-2" class="slide-opt" data-dec="2" role="radio" aria-checked="false" title="2 kuruş hanesi">2</button>
-            <button type="button" id="dec-0" class="slide-opt" data-dec="0" role="radio" aria-checked="false" title="Tam sayı">0</button>
+            <button type="button" id="dec-f" class="slide-opt active" data-dec="F" role="radio" aria-checked="true" title="Serbest ondalık / Float">F</button>
+            <button type="button" id="dec-2" class="slide-opt" data-dec="2" role="radio" aria-checked="false" title="2 ondalık / 2 decimals">2</button>
+            <button type="button" id="dec-0" class="slide-opt" data-dec="0" role="radio" aria-checked="false" title="Tam sayı / Integer">0</button>
           </div>
         </div>
 
         <div class="switch-group">
-          <span class="switch-label">KDV</span>
+          <span class="switch-label" data-i18n="switchTax">KDV</span>
           <div class="slide-track" role="radiogroup" aria-label="KDV oranı seçimi">
             <button type="button" id="kdv-1" class="slide-opt" data-kdv="1" role="radio" aria-checked="false">%1</button>
             <button type="button" id="kdv-10" class="slide-opt" data-kdv="10" role="radio" aria-checked="false">%10</button>
@@ -125,19 +152,19 @@
       <div class="calc-keypad">
         <!-- Top Slim Function Row -->
         <div class="keys-slim">
-          <button type="button" id="key-gt" class="key key-fn" data-action="gt" title="Genel Toplam (2. basışta sıfırlar)">GT</button>
-          <button type="button" id="key-mu" class="key key-fn" data-action="mu" title="Kâr Marjı / Satış Fiyatı (MU)">MU</button>
-          <button type="button" id="key-kdv-minus" class="key key-fn key-kdv" data-action="kdv-minus" title="KDV Hariç Fiyat (KDV Çıkar)">KDV−</button>
-          <button type="button" id="key-kdv-plus" class="key key-fn key-kdv" data-action="kdv-plus" title="KDV Dahil Fiyat (KDV Ekle)">KDV+</button>
+          <button type="button" id="key-gt" class="key key-fn" data-action="gt" title="Genel Toplam / Grand Total">GT</button>
+          <button type="button" id="key-mu" class="key key-fn" data-action="mu" title="Kâr Marjı / Mark-Up">MU</button>
+          <button type="button" id="key-kdv-minus" class="key key-fn key-kdv" data-action="kdv-minus" title="KDV Çıkar / Strip Tax">KDV−</button>
+          <button type="button" id="key-kdv-plus" class="key key-fn key-kdv" data-action="kdv-plus" title="KDV Ekle / Add Tax">KDV+</button>
           <button type="button" id="key-backspace" class="key key-fn" data-action="backspace" aria-label="Son haneyi sil" title="Son haneyi sil (Backspace)">▶</button>
         </div>
 
         <!-- Main 5x5 Shop Keypad -->
         <div class="keys-main">
           <!-- Row 1: Memory + Clear -->
-          <button type="button" id="key-mrc" class="key key-fn" data-action="mrc" title="Hafızayı çağır (2. basışta siler)">MRC</button>
-          <button type="button" id="key-m-minus" class="key key-fn" data-action="m-minus" title="Hafızadan çıkar">M−</button>
-          <button type="button" id="key-m-plus" class="key key-fn" data-action="m-plus" title="Hafızaya ekle">M+</button>
+          <button type="button" id="key-mrc" class="key key-fn" data-action="mrc" title="Hafıza / Memory Recall-Clear">MRC</button>
+          <button type="button" id="key-m-minus" class="key key-fn" data-action="m-minus" title="Hafızadan çıkar / Memory Minus">M−</button>
+          <button type="button" id="key-m-plus" class="key key-fn" data-action="m-plus" title="Hafızaya ekle / Memory Plus">M+</button>
           <button type="button" id="key-ce" class="key key-ce" data-action="ce" title="Son girişi temizle (Delete)">CE</button>
           <button type="button" id="key-ac" class="key key-ac" data-action="ac" title="Tüm işlemi sıfırla (Esc)">AC</button>
 
@@ -153,7 +180,7 @@
           <button type="button" id="key-5" class="key key-num key-five" data-digit="5">5</button>
           <button type="button" id="key-6" class="key key-num" data-digit="6">6</button>
           <button type="button" id="key-mul" class="key key-op" data-op="*" aria-label="Çarp">×</button>
-          <button type="button" id="key-sign" class="key key-op key-sign" data-action="sign" aria-label="İşaret değiştir" title="Artı / Eksi işaret değiştir">+/−</button>
+          <button type="button" id="key-sign" class="key key-op key-sign" data-action="sign" aria-label="İşaret değiştir">+/−</button>
 
           <!-- Row 4 -->
           <button type="button" id="key-1" class="key key-num" data-digit="1">1</button>
@@ -165,7 +192,7 @@
           <!-- Row 5 -->
           <button type="button" id="key-0" class="key key-num" data-digit="0">0</button>
           <button type="button" id="key-00" class="key key-num" data-action="00">00</button>
-          <button type="button" id="key-dot" class="key key-num" data-action="decimal" aria-label="Ondalık virgül">,</button>
+          <button type="button" id="key-dot" class="key key-num" data-action="decimal" aria-label="Ondalık">,</button>
           <button type="button" id="key-eq" class="key key-eq" data-action="equals" aria-label="Eşittir">=</button>
         </div>
       </div>
@@ -176,20 +203,20 @@
       <div class="receipt-edge-top" aria-hidden="true"></div>
       <div class="receipt-body">
         <div class="receipt-header">
-          <h2 class="receipt-title">Kasa Fişi</h2>
-          <button type="button" id="btn-receipt-close" class="receipt-close" aria-label="Kasa fişini kapat">&times;</button>
+          <h2 class="receipt-title" data-i18n="receiptTitle">Kasa Fişi</h2>
+          <button type="button" id="btn-receipt-close" class="receipt-close" aria-label="Kapat">&times;</button>
         </div>
         <ul id="receipt-list" class="receipt-list">
-          <li class="receipt-empty">Henüz işlem yok.<br />Yaptığınız hesaplar burada fiş gibi sıralanır.</li>
+          <li class="receipt-empty">Henüz işlem yok.</li>
         </ul>
         <div class="receipt-footer">
           <div class="receipt-gt-row">
-            <span class="receipt-gt-label">GENEL TOPLAM (GT)</span>
+            <span class="receipt-gt-label" data-i18n="receiptGtLabel">GENEL TOPLAM (GT)</span>
             <span id="receipt-gt-val" class="receipt-gt-val">0</span>
           </div>
           <div class="receipt-actions">
-            <button type="button" id="btn-receipt-copy" class="receipt-btn">Fişi Kopyala</button>
-            <button type="button" id="btn-receipt-clear" class="receipt-btn receipt-btn-danger">Temizle</button>
+            <button type="button" id="btn-receipt-copy" class="receipt-btn" data-i18n="receiptCopy">Fişi Kopyala</button>
+            <button type="button" id="btn-receipt-clear" class="receipt-btn receipt-btn-danger" data-i18n="receiptClear">Temizle</button>
           </div>
         </div>
       </div>
@@ -197,9 +224,7 @@
     </aside>
   </main>
 
-  <footer class="desk-hint">
-    Klavyeden rakamlar, <strong>+ − × / Enter</strong> ve <strong>Esc</strong> ile doğrudan kullanabilirsiniz · Sonucu kopyalamak için ekrana tıklayın
-  </footer>
+  <footer id="desk-hint" class="desk-hint"></footer>
 
   <!-- Tuş Rehberi Modal -->
   <div id="guide-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="guide-title" hidden>
@@ -208,42 +233,16 @@
         <h2 id="guide-title" class="modal-title">Esnaf Hesap Makinesi Tuş Rehberi</h2>
         <button type="button" id="btn-guide-close" class="receipt-close" aria-label="Rehberi kapat">&times;</button>
       </div>
-      <ul class="guide-list">
-        <li>
-          <span class="guide-kbd">GT</span>
-          <span><strong>Genel Toplam:</strong> Her <code>=</code> sonucu otomatik birikir. 1. basışta toplamı gösterir, 2. basışta sıfırlar.</span>
-        </li>
-        <li>
-          <span class="guide-kbd">MU</span>
-          <span><strong>Kâr Marjı:</strong> Maliyet <code>100 ÷ 20 MU</code> = <code>125</code> (%20 kârlı satış fiyatı). Satış <code>150 − 100 MU</code> = <code>50</code> (%50 kâr oranı).</span>
-        </li>
-        <li>
-          <span class="guide-kbd">KDV+ / −</span>
-          <span>Üstten seçilen <strong>%1, %10 veya %20</strong> KDV oranını anında ekler ya da KDV dahil fiyattan çıkarır.</span>
-        </li>
-        <li>
-          <span class="guide-kbd">%</span>
-          <span>Zam / İskonto: <code>200 + 15 %</code> = <code>230</code>, <code>200 − 15 %</code> = <code>170</code>, <code>200 × 15 %</code> = <code>30</code>.</span>
-        </li>
-        <li>
-          <span class="guide-kbd">MRC</span>
-          <span><strong>Hafıza:</strong> <code>M+</code> ekler, <code>M−</code> çıkarır. <code>MRC</code> ilk basışta hafızayı çağırır, ikinci basışta siler.</span>
-        </li>
-        <li>
-          <span class="guide-kbd coral">CE / AC</span>
-          <span><code>CE</code> sadece yazdığınız sayıyı siler; <code>AC</code> mevcut işlemi sıfırlar.</span>
-        </li>
-        <li>
-          <span class="guide-kbd">F · 2 · 0</span>
-          <span>Ondalık anahtarı: <strong>F</strong> serbest, <strong>2</strong> kuruşlu yuvarlama, <strong>0</strong> tam sayı.</span>
-        </li>
-      </ul>
-      <p class="guide-note">
-        <strong>Klavye kısayolları:</strong> Rakamlar, <code>+ - * /</code>, <code>Enter</code> (=), <code>%</code>, <code>Backspace</code> (▶), <code>Delete</code> (CE), <code>Esc</code> (AC). Kasa fişindeki herhangi bir satıra tıklayarak o sayıyı ekrana geri alabilirsiniz.
-      </p>
+      <ul id="guide-list" class="guide-list"></ul>
+      <p id="guide-note" class="guide-note"></p>
     </div>
   </div>
 
+  <script src="./i18n.js"></script>
+  <script src="./audio.js"></script>
+  <script src="./portraits.js"></script>
+  <script src="./story.js"></script>
   <script src="./app.js"></script>
+  <script src="./game.js"></script>
 </body>
 </html>
